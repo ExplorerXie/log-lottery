@@ -70,6 +70,8 @@ export function useViewModel() {
     const isInitialDone = ref<boolean>(false)
     const animationFrameId = ref<any>(null)
     const playingAudios = ref<HTMLAudioElement[]>([])
+    // 控制奖品列表显示/隐藏的状态
+    const prizeShow = ref(true)
     function initThreeJs() {
         const felidView = 40
         const width = window.innerWidth
@@ -397,6 +399,8 @@ export function useViewModel() {
             duration: 8000,
         })
         currentStatus.value = LotteryStatus.running
+        // 在抽奖开始时自动隐藏左侧的奖品列表
+        prizeShow.value = false
         rollBall(10, 3000)
         if (definiteTime.value) {
             setTimeout(() => {
@@ -439,6 +443,8 @@ export function useViewModel() {
                 .onComplete(() => {
                     canOperate.value = true
                     currentStatus.value = LotteryStatus.end
+                    // 在抽奖结束时自动显示左侧的奖品列表
+                    prizeShow.value = true
                 })
             new TWEEN.Tween(item.rotation)
                 .to({
@@ -508,6 +514,8 @@ export function useViewModel() {
         }
         personConfig.addAlreadyPersonList(luckyTargets.value, currentPrize.value)
         prizeConfig.updatePrizeConfig(currentPrize.value)
+        // 在继续抽奖时自动显示左侧的奖品列表
+        prizeShow.value = true
         await enterLottery()
     }
     /**
@@ -690,5 +698,6 @@ export function useViewModel() {
         isInitialDone,
         titleFont,
         titleFontSyncGlobal,
+        prizeShow,
     }
 }

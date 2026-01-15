@@ -7,6 +7,11 @@ import TemporaryList from './parts/TemporaryList.vue'
 import { usePrizeList } from './usePrizeList'
 
 const temporaryPrizeRef = ref()
+// 接收父组件传递的 prizeShow 模型
+const prizeShow = defineModel<boolean>('prizeShow', {
+    default: true,
+})
+
 const {
     temporaryPrize,
     changePersonCount,
@@ -16,12 +21,11 @@ const {
     submitTemporaryPrize,
     submitData,
     deleteTemporaryPrize,
-    prizeShow,
     currentPrize,
     localPrizeList,
     isMobile,
     selectedPrize,
-} = usePrizeList(temporaryPrizeRef)
+} = usePrizeList(temporaryPrizeRef, prizeShow)
 </script>
 
 <template>

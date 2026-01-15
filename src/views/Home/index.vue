@@ -5,14 +5,17 @@ import HeaderTitle from './components/HeaderTitle/index.vue'
 import OptionButton from './components/OptionsButton/index.vue'
 import PrizeList from './components/PrizeList/index.vue'
 import StarsBackground from './components/StarsBackground/index.vue'
+import CurrentPrizeDisplay from './components/CurrentPrizeDisplay/index.vue'
 import { useViewModel } from './useViewModel'
 import 'vue-toast-notification/dist/theme-sugar.css'
 
 const viewModel = useViewModel()
-const { setDefaultPersonList, tableData, currentStatus, enterLottery, stopLottery, containerRef, startLottery, continueLottery, quitLottery, isInitialDone, titleFont, titleFontSyncGlobal } = viewModel
+const { setDefaultPersonList, tableData, currentStatus, enterLottery, stopLottery, containerRef, startLottery, continueLottery, quitLottery, isInitialDone, titleFont, titleFontSyncGlobal, prizeShow } = viewModel
 const globalConfig = useStore().globalConfig
+const prizeConfig = useStore().prizeConfig
 
 const { getTopTitle: topTitle, getTextColor: textColor, getTextSize: textSize, getBackground: homeBackground } = storeToRefs(globalConfig)
+const { getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
 </script>
 
 <template>
@@ -38,7 +41,13 @@ const { getTopTitle: topTitle, getTextColor: textColor, getTextSize: textSize, g
     />
   </div>
   <StarsBackground :home-background="homeBackground" />
-  <PrizeList class="absolute left-0 top-32" />
+  <CurrentPrizeDisplay
+    :current-status="currentStatus"
+    :current-prize="currentPrize"
+    :is-lottery-running="currentStatus === 2"
+    class="absolute left-0 top-20"
+  />
+  <PrizeList v-model:prize-show="prizeShow" class="absolute left-0 top-32" />
 </template>
 
 <style scoped lang="scss">

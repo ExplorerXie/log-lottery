@@ -1,11 +1,11 @@
 import type { IPrizeConfig } from '@/types/storeType'
 import { storeToRefs } from 'pinia'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, type Ref } from 'vue'
 import i18n from '@/locales/i18n'
 
 import useStore from '@/store'
 
-export function usePrizeList(temporaryPrizeRef: any) {
+export function usePrizeList(temporaryPrizeRef: any, prizeShow?: Ref<boolean>) {
     const prizeConfig = useStore().prizeConfig
     const globalConfig = useStore().globalConfig
     const system = useStore().system
@@ -22,7 +22,8 @@ export function usePrizeList(temporaryPrizeRef: any) {
     const { getIsMobile: isMobile } = storeToRefs(system)
 
     const selectedPrize = ref<IPrizeConfig | null>(null)
-    const prizeShow = ref(structuredClone(isShowPrizeList.value))
+    // 如果传入了 prizeShow 参数，使用传入的；否则创建本地副本
+    const localPrizeShow = prizeShow || ref(structuredClone(isShowPrizeList.value))
 
     function addTemporaryPrize() {
         temporaryPrizeRef.value.showDialog()
@@ -91,7 +92,7 @@ export function usePrizeList(temporaryPrizeRef: any) {
         submitTemporaryPrize,
         submitData,
         deleteTemporaryPrize,
-        prizeShow,
+        prizeShow: localPrizeShow,
         localPrizeList,
         isMobile,
         selectedPrize,
